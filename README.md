@@ -3,6 +3,7 @@ This repository demonstrates a Single Sign-On (SSO) implementation using SAML 2.
 
 ✨ Features & Achievements
 🔑 Certificate & Key Management
+
 Successfully generated X509Certificate and Private Key for signing and verifying SAML Responses. 🔐
 Ensured secure communication between Identity Provider (IDP) and Service Provider (SP) using robust cryptographic mechanisms.
 🛠️ Metadata Generation
