@@ -1,0 +1,60 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.0'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'Saml.ssoImplementation.com'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Spring Security SAML2 dependencies
+	implementation 'org.springframework.security:spring-security-saml2-service-provider:6.0.2'
+	implementation 'org.springframework.security:spring-security-web:6.0.2'
+	implementation 'org.springframework.security:spring-security-config:6.0.2'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// OpenSAML dependencies for SAML metadata and signing
+	implementation 'org.opensaml:opensaml-saml-api:4.0.1'
+	implementation 'org.opensaml:opensaml-saml-impl:4.0.1'
+	implementation 'org.opensaml:opensaml-core:4.0.1'
+	implementation 'org.opensaml:opensaml-xmlsec-api:4.0.1'
+	implementation 'org.opensaml:opensaml-xmlsec-impl:4.0.1'
+
+	// Other cryptographic libraries
+	implementation 'org.bitbucket.b_c:jose4j:0.7.9'
+	implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+
+	// Spring Boot starter for web applications
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// Lombok for reducing boilerplate code
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// Spring Boot starter for testing
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+
+
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

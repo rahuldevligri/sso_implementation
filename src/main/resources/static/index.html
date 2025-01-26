@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send User Info</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #007BFF, #0056b3);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+
+        form {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            animation: slideIn 1s ease-out;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #007BFF;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+            background-color: #f0f8ff;
+        }
+
+        button {
+            background: linear-gradient(90deg, #007BFF, #0056b3);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s ease-in-out, background 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #0056b3, #003c7e);
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .form-container {
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h1>Submit User Information</h1>
+    <form method="POST" action="/restricted/api/v4/security-central/sp-initiated/sso" id="userForm">
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('userForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const email = document.getElementById('email').value;
+
+        // Ensure email is not empty
+        if (!email) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+
+        const payload = {
+            email: email
+        };
+
+        // Send a POST request with the email payload
+        fetch('/restricted/api/v4/security-central/sp-initiated/sso', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to submit data. HTTP status: ' + response.status);
+            }
+            return response.json(); // Parse the JSON response
+        })
+        .then(data => {
+            if (data.ssoUrl) {
+                // Redirect the user to the SSO URL
+                window.location.href = data.ssoUrl;
+            } else {
+                alert('Error: SSO URL not found in response.');
+            }
+        })
+        .catch(error => {
+            alert('An error occurred: ' + error.message);
+        });
+    });
+</script>
+</body>
+</html>

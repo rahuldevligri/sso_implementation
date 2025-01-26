@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirect to Paxes</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        text-align: center;
+    }
+    .button {
+        background-color: #007bff;
+        color: white;
+        padding: 15px 30px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+    .loader {
+        display: none;
+        margin: 20px auto;
+        border: 8px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 8px solid #007bff;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1 class="animate__animated animate__fadeInDown">Welcome to Paxes</h1>
+  <p class="animate__animated animate__fadeInUp">Click the button below to proceed to Paxes.</p>
+  <button class="button animate__animated animate__pulse animate__infinite" id="goToPaxesBtn">Go to Paxes</button>
+  <div class="loader" id="loader"></div>
+</div>
+
+<script>
+  document.getElementById('goToPaxesBtn').addEventListener('click', function() {
+      const loader = document.getElementById('loader');
+      loader.style.display = 'block';
+
+      fetch('/restricted/api/v4/security-central/sso/go-to/sp/62b44817-68e5-4569-931e-28e81bdaf0f2', {
+          method: 'GET',
+      })
+      .then(response => {
+          if (response.ok) {
+              return response.text();
+          }
+          throw new Error('Network response was not ok.');
+      })
+      .then(htmlForm => {
+          document.open();
+          document.write(htmlForm);
+          document.close();
+      })
+      .catch(error => {
+          loader.style.display = 'none';
+          alert('An error occurred: ' + error.message);
+      });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAML SSO Example</title>
+    <script>
+        function handleSSO() {
+    const email = document.getElementById("email").value;
+
+    // Check if email is provided
+    if (!email) {
+        alert("Please enter your email address");
+        return;
+    }
+
+    // Make a POST request to the /sso/email/{email} endpoint
+    fetch(`/public/api/v4/security-central/sso/email/${email}`, {
+        method: 'GET'  // Change method to GET because the backend expects a GET request
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.text();
+        } else {
+            throw new Error("Error: " + response.statusText);
+        }
+    })
+    .then(htmlForm => {
+        // Create a hidden iframe to submit the form
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+
+        const iframeDoc = iframe.contentWindow.document;
+        iframeDoc.open();
+        iframeDoc.write(htmlForm);
+        iframeDoc.close();
+
+        iframe.contentWindow.document.forms[0].submit();
+    })
+    .catch(error => {
+        alert("Error: " + error.message);
+    });
+}
+
+    </script>
+</head>
+<body>
+<h1>Login with SSO</h1>
+<label for="email">Email:</label>
+<input type="email" id="email" placeholder="Enter your email" required><br><br>
+<button onclick="handleSSO()">Login with SSO</button>
+</body>
+</html>
