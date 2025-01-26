@@ -2,4 +2,7 @@ node_modules/* linguist-vendored
 *.min.js linguist-vendored
 *.min.css linguist-vendored
 vendor/* linguist-vendored
+*.json linguist-detectable=false
+*.xml linguist-detectable=false
+
 
